@@ -26,16 +26,13 @@ const HomePage = () => {
       },
     },
     xaxis: {
-      categories: [], // This will be updated with formatted dates
+      categories: [],
       title: {
-        text: "Date",
+        text: "Month",
       },
       labels: {
         style: {
           colors: "#6B7280",
-        },
-        formatter: (value: string) => {
-          return value; // Display the full date
         },
       },
     },
@@ -113,27 +110,20 @@ const HomePage = () => {
         });
 
         const attendanceData = records.map((record) => ({
-          date: new Date(record.date), // Parse the date for sorting
+          date: formatDate(record.date),
           percentage: record.percentage,
         }));
 
-        // Sort the data by date
-        attendanceData.sort((a, b) => a.date.getTime() - b.date.getTime());
+        setAttendance(attendanceData);
+        setError(null);
 
         // Prepare data for the chart
-        const formattedDates = attendanceData.map((record) => {
-          const month = record.date.toLocaleString("default", {
-            month: "short",
-          });
-          const day = record.date.getDate();
-          const year = record.date.getFullYear();
-          return `${month} ${day}, ${year}`;
-        });
+        const months = attendanceData.map((record) => record.date);
         const percentages = attendanceData.map((record) => record.percentage);
 
         setChartOptions((prevOptions) => ({
           ...prevOptions,
-          xaxis: { categories: formattedDates },
+          xaxis: { categories: months },
         }));
         setChartSeries([
           {
@@ -141,8 +131,6 @@ const HomePage = () => {
             data: percentages,
           },
         ]);
-
-        setError(null);
       } catch (err) {
         setError("Failed to fetch data.");
         console.error("Error:", err);
