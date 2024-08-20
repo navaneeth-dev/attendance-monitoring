@@ -109,17 +109,20 @@ const HomePage = () => {
           filter: `registerNo="${registerNo}"`, // Filtering by registration number
         });
 
+        // Prepare and sort the attendance data
         const attendanceData = records.map((record) => ({
           date: formatDate(record.date),
           percentage: record.percentage,
         }));
 
-        setAttendance(attendanceData);
-        setError(null);
+        // Sort data for the graph (ascending order by date)
+        const sortedGraphData = [...attendanceData].sort(
+          (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+        );
 
-        // Prepare data for the chart
-        const months = attendanceData.map((record) => record.date);
-        const percentages = attendanceData.map((record) => record.percentage);
+        // Set data for the graph
+        const months = sortedGraphData.map((record) => record.date);
+        const percentages = sortedGraphData.map((record) => record.percentage);
 
         setChartOptions((prevOptions) => ({
           ...prevOptions,
@@ -131,6 +134,15 @@ const HomePage = () => {
             data: percentages,
           },
         ]);
+
+        // Sort data for the table (descending order by date)
+        const sortedTableData = [...attendanceData].sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        );
+
+        // Set data for the table
+        setAttendance(sortedTableData);
+        setError(null);
       } catch (err) {
         setError("Failed to fetch data.");
         console.error("Error:", err);
@@ -151,7 +163,7 @@ const HomePage = () => {
         <header className="max-w-screen-xl mx-auto bg-white shadow-md rounded-md">
           <nav className="flex justify-between items-center p-4">
             <div className="flex items-center space-x-4">
-              <h1 className="text-2xl font-extrabold text-gray-800">
+              <h1 className="text-2xl font-bold text-gray-800">
                 Attendance Monitoring System
               </h1>
             </div>

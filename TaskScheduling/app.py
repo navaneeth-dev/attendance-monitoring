@@ -47,7 +47,7 @@ def update_attendance():
             print(f"Processing student with Register No: {register_no}")
 
             # Call external API to get attendance data
-            api_url = f'http://192.168.1.4/attendance?username={register_no}&password={password}'
+            api_url = f'http://192.168.1.4:3001/attendance?username={register_no}&password={password}'
             print(f"API URL: {api_url}")
 
             try:
