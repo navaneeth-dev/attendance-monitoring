@@ -3,3 +3,4 @@ __pycache__
 ams
 celery_app.py
 test.py
+.venv/
