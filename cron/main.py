@@ -1,25 +1,51 @@
 from celery import Celery
 from celery.schedules import crontab
 
+import os
+
+from requests.models import stream_decode_response_unicode
+from dotenv import load_dotenv
+
+load_dotenv()
+
 import requests
 from bs4 import BeautifulSoup
 import pytesseract
 from playwright.sync_api import sync_playwright
 
-app = Celery('attendance', broker='redis://localhost')
+app = Celery("attendance", broker="redis://localhost")
 app.conf.broker_connection_retry_on_startup = False
-app.conf.update(timezone = 'Asia/Kolkata')
+app.conf.update(timezone="Asia/Kolkata")
+
+POCKETBASE_URL = os.getenv("POCKETBASE_URL")
+ATTENDANCE_PATH = "/api/collections/attendance/records"
+ADMIN_PATH = "/api/admins/auth-with-password"
+STUDENTS_PATH = '/api/collections/students/records'
+
 
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
-    # Calls test('hello') every 10 seconds.
-    sender.add_periodic_task(1.0, test.s('hello'), name='add every 10')
+    queue_get_attendance.delay()
 
-    # Executes every Monday morning at 7:30 a.m.
-    #sender.add_periodic_task(
-    #    crontab(hour=7, minute=30, day_of_week=1),
-    #    test.s('Happy Mondays!'),
-    #)
+    sender.add_periodic_task(
+        crontab(hour=7, minute=30, day_of_week=1),
+        queue_get_attendance.s(),
+    )
+
+
+@app.task
+def queue_get_attendance():
+    # Admin token
+    r = requests.post(
+        f"{POCKETBASE_URL}{ADMIN_PATH}",
+        data={"identity": os.getenv("ADMIN_EMAIL"), "password": os.getenv("ADMIN_PASSWORD")},
+    )
+
+    r = requests.get(f"{POCKETBASE_URL}{STUDENTS_PATH}", headers={"Authorization": f"Bearer {r.json()["token"]}"})
+    students = r.json()["items"]
+    for student in students:
+        get_attendance.delay(str(student["registerNo"]), student["password"])
+
 
 @app.task
 def get_attendance(username: str, password: str) -> float:
@@ -27,7 +53,6 @@ def get_attendance(username: str, password: str) -> float:
         browser = p.chromium.launch(headless=False)
         page = browser.new_page()
 
-        # Open the login page
         login_url = (
             "https://erp.velsuniv.ac.in/velsonline/students/loginManager/youLogin.jsp"
         )
@@ -36,20 +61,16 @@ def get_attendance(username: str, password: str) -> float:
         )
         page.goto(login_url)
 
-        # Wait for and fill the login form
         page.fill('input[name="login"]', username)
-        page.fill('input[name="passwd"]', pwd)
+        page.fill('input[name="passwd"]', password)
 
-        # Handle CAPTCHA
         captcha_image = page.locator("//img[@src='/velsonline/captchas']")
         captcha_image.screenshot(path="captcha.png")
         captcha_text = pytesseract.image_to_string("captcha.png").strip()
         page.fill('input[name="ccode"]', captcha_text)
 
-        # Submit the login form
         page.click("#_save")
 
-        # Wait for the home page to load
         home_url = (
             "https://erp.velsuniv.ac.in/velsonline/students/template/HRDSystem.jsp"
         )
@@ -97,6 +118,7 @@ def get_attendance(username: str, password: str) -> float:
         attendance_url = "https://erp.velsuniv.ac.in/velsonline/students/report/studentSubjectWiseAttendance.jsp"
         response = requests.post(attendance_url, headers=headers)
 
+        percentage = 0.0
         if response.status_code == 200:
             soup = BeautifulSoup(response.text, "html.parser")
 
@@ -104,9 +126,8 @@ def get_attendance(username: str, password: str) -> float:
             subtotal_row = soup.find("tr", class_="subtotal")
             if subtotal_row:
                 percentage_td = subtotal_row.find_all("td", align="right")[3]
-                percentage = percentage_td.string.strip()
+                percentage = float(percentage_td.string.strip()[:-1])
             else:
-                percentage = "Not Found"
                 print("Subtotal row not found.")
 
             # Extract the end date <td>16/Aug/2024</td>
@@ -123,8 +144,8 @@ def get_attendance(username: str, password: str) -> float:
                 end_date = "Not Found"
                 print("Period row not found.")
         else:
-            percentage = "Failed to retrieve"
             end_date = "Failed to retrieve"
             print(f"Failed to retrieve the page. Status code: {response.status_code}")
 
         browser.close()
+        return percentage
