@@ -2,6 +2,7 @@ from celery import Celery
 from celery.schedules import crontab
 
 import os
+import datetime
 
 from requests.models import stream_decode_response_unicode
 from dotenv import load_dotenv
@@ -20,7 +21,7 @@ app.conf.update(timezone="Asia/Kolkata")
 POCKETBASE_URL = os.getenv("POCKETBASE_URL")
 ATTENDANCE_PATH = "/api/collections/attendance/records"
 ADMIN_PATH = "/api/admins/auth-with-password"
-STUDENTS_PATH = '/api/collections/students/records'
+STUDENTS_PATH = "/api/collections/students/records"
 
 
 @app.on_after_configure.connect
@@ -38,17 +39,28 @@ def queue_get_attendance():
     # Admin token
     r = requests.post(
         f"{POCKETBASE_URL}{ADMIN_PATH}",
-        data={"identity": os.getenv("ADMIN_EMAIL"), "password": os.getenv("ADMIN_PASSWORD")},
+        data={
+            "identity": os.getenv("ADMIN_EMAIL"),
+            "password": os.getenv("ADMIN_PASSWORD"),
+        },
     )
+    admin_token = r.json()["token"]
 
-    r = requests.get(f"{POCKETBASE_URL}{STUDENTS_PATH}", headers={"Authorization": f"Bearer {r.json()["token"]}"})
+    r = requests.get(
+        f"{POCKETBASE_URL}{STUDENTS_PATH}",
+        headers={"Authorization": f"Bearer {admin_token}"},
+    )
     students = r.json()["items"]
     for student in students:
-        get_attendance.delay(str(student["registerNo"]), student["password"])
+        get_attendance.delay(
+            str(student["registerNo"]), student["password"], student["id"], admin_token
+        )
 
 
 @app.task
-def get_attendance(username: str, password: str) -> float:
+def get_attendance(
+    username: str, password: str, student_id: str, admin_token: str
+) -> float:
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=False)
         page = browser.new_page()
@@ -148,4 +160,14 @@ def get_attendance(username: str, password: str) -> float:
             print(f"Failed to retrieve the page. Status code: {response.status_code}")
 
         browser.close()
+        append_attendance(percentage, student_id, admin_token)
         return percentage
+
+
+def append_attendance(percentage: float, student_id: str, admin_token: str):
+    r = requests.post(
+        f"{POCKETBASE_URL}{ATTENDANCE_PATH}",
+        json={"percentage": percentage, "student": student_id, "date": datetime.datetime.today().isoformat()},
+        headers={"Authorization": f"Bearer {admin_token}"},
+    )
+    print(r.json())
