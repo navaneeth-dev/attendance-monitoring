@@ -5,3 +5,5 @@ celery_app.py
 test.py
 .venv/
 pocketbase
+cron/celerybeat-schedule
+backend/pb_data/
