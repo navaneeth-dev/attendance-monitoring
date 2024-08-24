@@ -4,7 +4,6 @@ from celery.schedules import crontab
 import os
 import datetime
 
-from requests.models import stream_decode_response_unicode
 from dotenv import load_dotenv
 
 load_dotenv()
