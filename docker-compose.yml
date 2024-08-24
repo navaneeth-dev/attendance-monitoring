@@ -1,4 +1,8 @@
 services:
-  backend:
-    image: backend
-    build: ./backend
+  #backend:
+  #  image: backend
+  #  build: ./backend
+  redis:
+    image: redis:7
+    ports:
+      - 6379:6379
