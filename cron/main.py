@@ -25,10 +25,8 @@ STUDENTS_PATH = "/api/collections/students/records"
 
 @app.on_after_configure.connect
 def setup_periodic_tasks(sender, **kwargs):
-    queue_get_attendance.delay()
-
     sender.add_periodic_task(
-        crontab(hour=7, minute=30, day_of_week=1),
+        crontab(hour=19),
         queue_get_attendance.s(),
     )
 
