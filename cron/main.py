@@ -13,7 +13,7 @@ from bs4 import BeautifulSoup
 import pytesseract
 from playwright.sync_api import sync_playwright
 
-app = Celery("attendance", broker="redis://localhost")
+app = Celery("attendance", broker=os.getenv("REDIS_URL"))
 app.conf.broker_connection_retry_on_startup = False
 app.conf.update(timezone="Asia/Kolkata")
 
@@ -59,7 +59,7 @@ def get_attendance(
     username: str, password: str, student_id: str, admin_token: str
 ) -> float:
     with sync_playwright() as p:
-        browser = p.chromium.launch(headless=False)
+        browser = p.chromium.launch(headless=True)
         page = browser.new_page()
 
         login_url = (

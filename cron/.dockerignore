@@ -1,0 +1,4 @@
+captcha.png
+celerybeat-schedule
+__pycache__/
+.env
