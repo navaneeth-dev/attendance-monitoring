@@ -5,4 +5,5 @@
 - [ ] next.config.js env
 - [ ] db naming changes
 - [ ] db api rules fix
+- [ ] use pocketbase globally
 
