@@ -1,12 +1,11 @@
-// app/login/page.tsx
-
-"use client"; // This directive makes the component a Client Component
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import PocketBase from "pocketbase";
+import Image from "next/image";
 
-const pb = new PocketBase("http://127.0.0.1:8090"); // Replace with your PocketBase server URL
+const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
 
 const LoginPage = () => {
   const [registerNo, setRegisterNo] = useState("");
@@ -40,7 +39,7 @@ const LoginPage = () => {
         setError(null);
 
         // Redirect to the home page
-        router.push("/home"); // Adjust the redirect path as needed
+        router.push("/home");
       } else {
         setSuccess(null);
         setError("Invalid registration number or password.");
@@ -54,7 +53,17 @@ const LoginPage = () => {
 
   return (
     <div className="max-w-sm mx-auto mt-10">
-      <h1 className="text-2xl font-bold mb-6 text-center">Login Page</h1>
+      <div className="flex justify-center items-end ">
+        <Image
+          src="/ov.png"
+          alt="OnlyVels AMS"
+          width={1280}
+          height={320}
+          className="h-10 w-auto"
+        />
+        <span className="font-medium text-xs">AMS</span>
+      </div>
+
       <form
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-lg shadow-md"
@@ -93,9 +102,17 @@ const LoginPage = () => {
             required
           />
         </div>
+        <div className="register mb-5">
+          <p>
+            Don&apos;t have an account?
+            <a href="/register" className="font-semibold underline">
+              Sign up
+            </a>
+          </p>
+        </div>
         <button
           type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+          className="text-white bg-[#00aeef] hover:bg-[##008ac9] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
         >
           Login
         </button>

@@ -1,12 +1,11 @@
-// app/register/page.tsx
-
-"use client"; // This directive makes the component a Client Component
+"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import PocketBase from "pocketbase";
+import Image from "next/image";
 
-const pb = new PocketBase("http://127.0.0.1:8090"); // Replace with your PocketBase server URL
+const pb = new PocketBase(process.env.NEXT_PUBLIC_POCKETBASE_URL);
 
 const RegisterPage = () => {
   const [name, setName] = useState("");
@@ -43,7 +42,16 @@ const RegisterPage = () => {
 
   return (
     <div className="max-w-sm mx-auto mt-10">
-      <h1 className="text-2xl font-bold mb-6 text-center">Register Page</h1>
+      <div className="flex justify-center items-end ">
+        <Image
+          src="/ov.png"
+          alt="OnlyVels AMS"
+          width={1280}
+          height={320}
+          className="h-10 w-auto"
+        />
+        <span className="font-medium text-xs">AMS</span>
+      </div>
       <form
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-lg shadow-md"
@@ -101,10 +109,18 @@ const RegisterPage = () => {
         </div>
         <button
           type="submit"
-          className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+          className="text-white bg-[#00aeef] hover:bg-[#008ccf] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
         >
           Register
         </button>
+        <div className="register mt-5">
+          <p>
+            Already have an account?
+            <a href="/login" className="font-semibold underline">
+              Login
+            </a>
+          </p>
+        </div>
       </form>
       {error && <p className="mt-4 text-red-500 text-center">{error}</p>}
       {success && <p className="mt-4 text-green-500 text-center">{success}</p>}
