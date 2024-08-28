@@ -34,10 +34,9 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@f95db51fddba0c2d1ec667646a06c2ce06100226 # v3.0.0
-        platforms: linux/amd64,linux/arm64
+        with:
+          platforms: linux/amd64,linux/arm64
 
-      # Login against a Docker registry except on PR
-      # https://github.com/docker/login-action
       - name: Log into registry ${{ env.REGISTRY }}
         if: github.event_name != 'pull_request'
         uses: docker/login-action@343f7c4344506bcbf9b4de18042ae17996df046d # v3.0.0
@@ -55,7 +54,6 @@ jobs:
       - name: Build backend and push Docker image
         id: build-backend
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
-        platforms: linux/amd64,linux/arm64
         with:
           context: backend
           push: ${{ github.event_name != 'pull_request' }}
@@ -63,11 +61,11 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
 
       - name: Build cron and push Docker image
         id: build-cron
         uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
-        platforms: linux/amd64,linux/arm64
         with:
           context: cron
           push: ${{ github.event_name != 'pull_request' }}
@@ -75,10 +73,10 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          platforms: linux/amd64,linux/arm64
 
       #- name: Build frontend and push Docker image
       #  uses: docker/build-push-action@0565240e2d4ab88bba5387d719585280857ece09 # v5.0.0
-      #  platforms: linux/amd64,linux/arm64
       #  with:
       #    context: frontend
       #    push: ${{ github.event_name != 'pull_request' }}
@@ -86,6 +84,7 @@ jobs:
       #    labels: ${{ steps.meta.outputs.labels }}
       #    cache-from: type=gha
       #    cache-to: type=gha,mode=max
+      #    platforms: linux/amd64,linux/arm64
 
       - name: Sign the published Docker image
         if: ${{ github.event_name != 'pull_request' }}
