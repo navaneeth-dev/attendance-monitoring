@@ -8,3 +8,4 @@ pocketbase
 cron/celerybeat-schedule
 backend/pb_data/
 .env
+pb_data/
