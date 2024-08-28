@@ -14,7 +14,7 @@ import pytesseract
 from playwright.sync_api import sync_playwright
 
 app = Celery("attendance", broker=os.getenv("REDIS_URL"))
-app.conf.broker_connection_retry_on_startup = False
+app.conf.broker_connection_retry_on_startup = True
 app.conf.update(timezone="Asia/Kolkata")
 
 POCKETBASE_URL = os.getenv("POCKETBASE_URL")
