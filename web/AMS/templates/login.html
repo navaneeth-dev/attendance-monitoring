@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+    {% load static %}
+    <link href="{% static 'styles.css' %}" rel="stylesheet" />
+    <script src="{% static 'tailwindcss.js' %}"></script>
+  </head>
+  <body class="bg-gray-100">
+    <div class="max-w-sm mx-auto mt-10">
+      <div class="flex justify-center items-end mb-6">
+        <img
+          src="{% static 'assets/ov.png' %}"
+          alt="OnlyVels AMS"
+          class="h-10 w-auto"
+        />
+        <span class="font-medium text-xs">AMS</span>
+      </div>
+
+      <form method="post" class="bg-white p-6 rounded-lg shadow-md">
+        {% csrf_token %}
+
+        <div class="mb-5">
+          <label
+            for="registerNo"
+            class="block mb-2 text-sm font-medium text-gray-900"
+            >Registration Number</label
+          >
+          <input
+            type="text"
+            id="registerNo"
+            name="registerNo"
+            value="{{ form.registerNo.value|default:'' }}"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            placeholder="Registration Number"
+            required
+          />
+          {% if form.registerNo.errors %}
+          <p class="text-red-500 text-sm mt-1">{{ form.registerNo.errors }}</p>
+          {% endif %}
+        </div>
+
+        <div class="mb-5">
+          <label
+            for="password"
+            class="block mb-2 text-sm font-medium text-gray-900"
+            >Password</label
+          >
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value="{{ form.password.value|default:'' }}"
+            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            placeholder="Password"
+            required
+          />
+          {% if form.password.errors %}
+          <p class="text-red-500 text-sm mt-1">{{ form.password.errors }}</p>
+          {% endif %}
+        </div>
+
+        <div class="register mb-5">
+          <p>
+            Don't have an account?
+            <a href="{% url 'register' %}" class="font-semibold underline"
+              >Sign up</a
+            >
+          </p>
+        </div>
+
+        <button
+          type="submit"
+          class="text-white bg-[#00aeef] hover:bg-[#008ac9] focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center"
+        >
+          Login
+        </button>
+      </form>
+
+      {% if form.non_field_errors %}
+      <p class="mt-4 text-red-500 text-center">{{ form.non_field_errors }}</p>
+      {% endif %}
+    </div>
+  </body>
+</html>

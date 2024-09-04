@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Index</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+    <script src="{% static 'tailwindcss.js' %}"></script>
+  </head>
+  <body>
+    <section class="pt-12 sm:pt-15">
+      <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div class="text-center">
+          <div class="flex justify-center items-end">
+            <img
+              src="{% static 'assets/ov.png' %}"
+              alt="OnlyVels AMS"
+              width="1280"
+              height="320"
+              class="md:h-20 h-16 w-auto"
+            />
+            <span class="font-medium md:text-2xl text-xl">AMS</span>
+          </div>
+          <h1
+            class="max-w-4xl mx-auto px-6 md:text-lg mt-5 text-gray-600 font-inter"
+          >
+            Welcome to OnlyVels AMS, the ultimate solution for effortless
+            attendance management. Get real-time insights, detailed reports, and
+            an intuitive interface to simplify tracking and managing attendance.
+            Experience precision and ease like never before!
+          </h1>
+          <div
+            class="px-8 sm:items-start sm:justify-center sm:px-0 sm:space-x-5 sm:flex mt-9"
+          >
+            <a
+              href="{% url 'login' %}"
+              class="mb-3 sm:mb-0 inline-flex items-center justify-center w-full px-8 py-3 text-lg font-bold text-white transition-all duration-200 bg-gray-900 border-2 border-transparent sm:w-auto rounded-xl hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+              role="button"
+            >
+              Login
+            </a>
+            <a
+              href="{% url 'register' %}"
+              class="inline-flex items-center justify-center w-full px-8 py-3 text-lg font-bold text-gray-900 hover:text-white transition-all duration-200 bg-gray-100 border-2 border-gray-900 sm:w-auto rounded-xl hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+              role="button"
+            >
+              Create an account
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="bg-white">
+        <div class="relative mx-auto mt-4 md:mt-8">
+          <div class="lg:max-w-4xl lg:mx-auto">
+            <img
+              class="px-4 md:mpx-8"
+              width="1622"
+              height="912"
+              src="{% static 'assets/ss.png' %}"
+              alt=""
+            />
+          </div>
+        </div>
+      </div>
+      <div
+        class="text-center flex justify-center items-center mt-12 p-3 border bt"
+      >
+        <a
+          href="https://github.com/0xramm/Attendance-Monitoring"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="flex justify-center items-center"
+        >
+          <p class="text-gray-600 mb-2 font-semibold">Contribute to OnlyVels</p>
+          <img
+            class="h-5 ml-2 mb-1"
+            src="{% static 'assets/git.svg' %}"
+            width="20"
+            height="20"
+            alt=""
+          />
+        </a>
+      </div>
+    </section>
+  </body>
+</html>

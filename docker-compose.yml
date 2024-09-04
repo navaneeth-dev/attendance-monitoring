@@ -12,3 +12,8 @@ services:
       REDIS_URL: 'redis://redis'
       ADMIN_EMAIL: 'admin@rize.anonaddy.com'
       ADMIN_PASSWORD: 'Tameness3,Swaddling,Immovable,Open'
+  web:
+    image: web
+    build: ./web
+    environment: {}
+

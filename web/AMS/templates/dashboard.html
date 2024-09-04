@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles.css' %}" />
+    <script src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src="{% static 'tailwindcss.js' %}"></script>
+    <script>
+      // Load the Visualization API and the linechart package.
+      google.charts.load('current', { packages: ['corechart'] });
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.charts.setOnLoadCallback(drawChart);
+
+      function drawChart() {
+        // Create the data table.
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Date');
+        data.addColumn('number', 'Percentage');
+
+        // Add data from Django context.
+        var chartData = [
+          {% for record in attendance_records %}
+            ['{{ record.date }}', {{ record.percentage|floatformat:2 }}],
+          {% endfor %}
+        ];
+
+        data.addRows(chartData);
+
+        // Set chart options
+        var options = {
+          title: 'Attendance Over Time',
+          curveType: 'function',
+          pointsVisible: true,
+          hAxis: {
+            title: 'Date',
+          },
+          vAxis: {
+            title: 'Percentage',
+            ticks: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+          },
+        };
+
+        // Instantiate and draw our chart, passing in some options.
+        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+    <div class="w-full">
+      <header
+        class="max-w-screen-xl mx-auto bg-white shadow-md rounded-md sticky top-0 z-50"
+      >
+        <nav class="flex justify-between items-center p-4">
+          <div class="flex items-end">
+            <img
+              src="{% static 'assets/ov.png' %}"
+              alt="OnlyVels AMS"
+              width="1280"
+              height="320"
+              class="h-10 w-auto"
+            />
+            <span class="font-medium text-xs">AMS</span>
+          </div>
+          <div class="flex items-center space-x-4">
+            {% if student %}
+            <span class="text-lg font-semibold text-gray-600">
+              Welcome, {{ student.studName }}
+            </span>
+            {% endif %}
+            <a
+              href="{% url 'logout' %}"
+              class="bg-[#00b0f0] text-white hover:bg-[#008ac9] focus:ring-4 focus:outline-none focus:ring-[#008ac9] font-medium rounded-lg text-sm px-4 py-2"
+            >
+              Logout
+            </a>
+          </div>
+        </nav>
+      </header>
+    </div>
+
+    <div class="max-w-screen-xl mx-auto mt-4">
+      {% if error_message %}
+      <p class="text-red-500 text-center mt-4">{{ error_message }}</p>
+      {% endif %}
+
+      <div class="bg-white border border-gray-200 rounded-lg shadow-md p-4">
+        <div id="curve_chart" style="width: 100%; height: 500px"></div>
+        <table
+          class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md mt-6"
+        >
+          <thead>
+            <tr class="bg-gray-100 border-b">
+              <th class="py-3 px-4 text-left text-sm font-medium text-gray-900">
+                Date
+              </th>
+              <th class="py-3 px-4 text-left text-sm font-medium text-gray-900">
+                Percentage
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            {% if attendance_records %} {% for record in attendance_records %}
+            <tr class="border-b">
+              <td class="py-3 px-4 text-sm text-gray-900">{{ record.date }}</td>
+              <td class="py-3 px-4 text-sm text-gray-900">
+                {{ record.percentage|floatformat:2 }}%
+              </td>
+            </tr>
+            {% endfor %} {% else %}
+            <tr>
+              <td colspan="2" class="py-3 px-4 text-center text-gray-500">
+                No records found
+              </td>
+            </tr>
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div
+      class="text-center flex justify-center items-center mt-12 p-3 border bt"
+    >
+      <a
+        href="https://github.com/0xramm/Attendance-Monitoring"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="flex justify-center items-center"
+      >
+        <p class="text-gray-600 mb-2 font-semibold">Contribute to OnlyVels</p>
+        <img
+          class="h-5 ml-2 mb-1"
+          src="{% static 'assets/git.svg' %}"
+          width="20"
+          height="20"
+          alt=""
+        />
+      </a>
+    </div>
+  </body>
+</html>
