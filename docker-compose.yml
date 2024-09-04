@@ -1,11 +1,4 @@
 services:
-  backend:
-    image: backend
-    build: ./backend
-    volumes:
-      - "./backend/pb_data:/pb/pb_data"
-    ports:
-      - "8080:8080"
   redis:
     image: redis:7
     ports:
