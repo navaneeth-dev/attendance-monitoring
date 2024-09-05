@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-$5!zm%l@%w1z%j62w8jpoln3ec7x2jck9rf6w^*d^(r5yl8b-2')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv('DJANGO_DEBUG', True)
+DEBUG = True if os.environ.get('DJANGO_DEBUG') == None else False
 
 ALLOWED_HOSTS = ['127.0.0.1', 'attendance.staging.rizexor.com', 'attendance.prod.rizexor.com']
 
