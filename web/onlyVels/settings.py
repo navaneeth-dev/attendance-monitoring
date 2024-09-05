@@ -155,3 +155,5 @@ STORAGES = {
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 ENCRYPTION_KEY = b"IHXHq07tV6UT/H6Eq7XIfHKy9nW2Lw7tQD2Fn9s4f7I="
+
+CSRF_TRUSTED_ORIGINS = ["https://attendance.staging.rizexor.com","https://prod.staging.rizexor.com"]
