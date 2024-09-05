@@ -16,4 +16,6 @@ services:
     image: web
     build: ./web
     environment: {}
+    ports:
+    - 8001:8080
 
