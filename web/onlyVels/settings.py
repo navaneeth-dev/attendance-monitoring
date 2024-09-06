@@ -163,7 +163,7 @@ ENCRYPTION_KEY = b"IHXHq07tV6UT/H6Eq7XIfHKy9nW2Lw7tQD2Fn9s4f7I="
 
 CSRF_TRUSTED_ORIGINS = [
     "https://attendance.staging.rizexor.com",
-    "https://prod.staging.rizexor.com",
+    "https://attendance.prod..rizexor.com",
 ]
 
 CELERY_BEAT_SCHEDULE = {
@@ -173,4 +173,4 @@ CELERY_BEAT_SCHEDULE = {
     },
 }
 
-CELERY_BROKER_URL = "redis://localhost:6379"
+CELERY_BROKER_URL = env.str("CELERY_BROKER_URL")
