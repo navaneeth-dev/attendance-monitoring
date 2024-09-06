@@ -12,4 +12,4 @@ COPY . /app/
 
 EXPOSE 8080
 
-CMD python3 manage.py migrate; python3 -m gunicorn onlyVels.asgi:application -k uvicorn.workers.UvicornWorker -b :8080
+#CMD python3 manage.py migrate; python3 -m gunicorn onlyVels.asgi:application -k uvicorn.workers.UvicornWorker -b :8080

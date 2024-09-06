@@ -1,4 +1,8 @@
 services:
+  redis:
+    image: redis:7
+    ports:
+      - 6379:6379
   postgres:
     image: postgres:16
     environment:
@@ -6,13 +10,21 @@ services:
     ports:
       - 5432:5432
   web:
-    image: web
     build: ./web
+    command: >
+      bash -c "python3 manage.py migrate
+      && python3 -m gunicorn onlyVels.asgi:application -k uvicorn.workers.UvicornWorker -b :8080"
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_NAME: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+    - 8001:8080
+  celery:
+    build: ./web
+    command: celery -A onlyVels beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
     environment:
       POSTGRES_HOST: postgres
       POSTGRES_USER: postgres
       POSTGRES_NAME: postgres
-      POSTGRES_PASSWORD: postgres
-    ports:
-    - 8001:8080
-
+      POSTGRES_PASSWORD: password
