@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "AMS",
+    "django_celery_beat",
 ]
 
 MIDDLEWARE = [
@@ -86,8 +87,11 @@ WSGI_APPLICATION = "onlyVels.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "HOST": env.str("POSTGRES_HOST"),
+        "NAME": env.str("POSTGRES_NAME"),
+        "USER": env.str("POSTGRES_USER"),
+        "PASSWORD": env.str("POSTGRES_PASSWORD"),
     }
 }
 

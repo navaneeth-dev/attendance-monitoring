@@ -1,21 +1,16 @@
 services:
-  redis:
-    image: redis:7
-    ports:
-      - 6379:6379
-  cron:
-    image: cron
-    build: ./cron
+  postgres:
+    image: postgres:16
     environment:
-      C_FORCE_ROOT: true
-      POCKETBASE_URL: 'http://backend:8080'
-      REDIS_URL: 'redis://redis'
-      ADMIN_EMAIL: 'admin@rize.anonaddy.com'
-      ADMIN_PASSWORD: 'Tameness3,Swaddling,Immovable,Open'
+      POSTGRES_PASSWORD: password
   web:
     image: web
     build: ./web
-    environment: {}
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_NAME: postgres
+      POSTGRES_PASSWORD: postgres
     ports:
     - 8001:8080
 
