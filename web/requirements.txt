@@ -43,6 +43,8 @@ platformdirs==4.2.2
 playwright==1.46.0
 pluggy==1.5.0
 prompt_toolkit==3.0.47
+psycopg==3.2.1
+psycopg-binary==3.2.1
 pycparser==2.22
 pyee==11.1.0
 pytesseract==0.3.13
