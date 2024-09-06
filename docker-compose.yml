@@ -28,3 +28,4 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_NAME: postgres
       POSTGRES_PASSWORD: password
+      CELERY_BROKER_URL: redis://redis
