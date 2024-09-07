@@ -1,5 +1,3 @@
-# AMS/management/commands/fetch_attendance.py
-import pytz
 from datetime import datetime
 from django.core.management.base import BaseCommand
 from AMS.models import Student, Attendance

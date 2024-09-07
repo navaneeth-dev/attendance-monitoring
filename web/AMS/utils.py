@@ -1,5 +1,4 @@
 from playwright.sync_api import sync_playwright
-from dateutil import parser
 import pytesseract
 import time
 from datetime import datetime
