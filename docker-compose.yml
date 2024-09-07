@@ -14,6 +14,7 @@ services:
     command: >
       bash -c "python3 manage.py migrate
       && python3 -m gunicorn onlyVels.asgi:application -k uvicorn.workers.UvicornWorker -b :8080"
+    environment:
       POSTGRES_HOST: postgres
       POSTGRES_USER: postgres
       POSTGRES_NAME: postgres
@@ -22,7 +23,7 @@ services:
     - 8001:8080
   celery:
     build: ./web
-    command: celery -A onlyVels beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    command: python3 -m celery -A onlyVels beat -l INFO --scheduler django_celery_beat.schedulers:DatabaseScheduler
     environment:
       POSTGRES_HOST: postgres
       POSTGRES_USER: postgres
