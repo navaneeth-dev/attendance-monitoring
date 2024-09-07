@@ -167,10 +167,12 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 CELERY_BEAT_SCHEDULE = {
-    "fetch-attendances": {
-        "task": "AMS.tasks.fetch-attendances",
-        "schedule": 60.0,
+    "fetch_attendances_schedule": {
+        "task": "AMS.tasks.fetch_attendances",
+        "schedule": crontab(hour=19, minute=0),
     },
 }
 
 CELERY_BROKER_URL = env.str("CELERY_BROKER_URL")
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+
