@@ -168,8 +168,8 @@ CSRF_TRUSTED_ORIGINS = [
 
 CELERY_BEAT_SCHEDULE = {
     "fetch-attendances": {
-        "task": "AMS.tasks.test",
-        "schedule": 10.0,
+        "task": "AMS.tasks.fetch-attendances",
+        "schedule": 60.0,
     },
 }
 
