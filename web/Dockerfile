@@ -1,14 +1,16 @@
-FROM python:3.12
+FROM mcr.microsoft.com/playwright/python:v1.46.0-jammy
 
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+RUN mkdir /app
 WORKDIR /app
 
+# Cache deps
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
-COPY . /app/
+COPY . .
 
 EXPOSE 8080
 
