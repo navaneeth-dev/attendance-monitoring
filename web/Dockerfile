@@ -3,6 +3,8 @@ FROM mcr.microsoft.com/playwright/python:v1.46.0-jammy
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+RUN apt-get update && apt-get install tesseract-ocr -y
+
 RUN mkdir /app
 WORKDIR /app
 
