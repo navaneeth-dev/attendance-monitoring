@@ -6,8 +6,8 @@ from AMS.models import Student
 
 def gen_ntfy_topics(apps, schema_editor):
     for row in Student.objects.all():
-        row.uuid = AMS.models.random_string()
-        print(row.uuid)
+        row.ntfy_topic = AMS.models.random_string()
+        print(row.ntfy_topic)
         row.save(update_fields=["ntfy_topic"])
 
 
