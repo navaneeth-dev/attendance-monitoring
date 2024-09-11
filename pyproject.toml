@@ -19,6 +19,7 @@ uvicorn = "^0.30.6"
 gunicorn = "^23.0.0"
 pytesseract = "^0.3.13"
 playwright = "^1.46.0"
+requests = "^2.32.3"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.8.0"
