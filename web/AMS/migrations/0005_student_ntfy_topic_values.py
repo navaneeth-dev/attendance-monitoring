@@ -18,5 +18,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(gen_ntfy_topics, reverse_code=migrations.RunPython.noop),
+        migrations.RunPython(gen_ntfy_topics),
     ]
