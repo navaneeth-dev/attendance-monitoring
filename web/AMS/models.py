@@ -34,6 +34,5 @@ class Attendance(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     date = models.DateField()
     percentage = models.FloatField()
+    last_run = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return f'{self.student.studName} - {self.date} - {self.percentage}%'

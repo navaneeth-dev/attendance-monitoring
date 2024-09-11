@@ -108,6 +108,9 @@
         >
           <thead>
             <tr class="bg-gray-100 border-b">
+            <th class="py-3 px-4 text-left text-sm font-medium text-gray-900">
+                Last Run
+              </th>
               <th class="py-3 px-4 text-left text-sm font-medium text-gray-900">
                 Date
               </th>
@@ -119,6 +122,7 @@
           <tbody>
             {% if attendance_records %} {% for record in attendance_records %}
             <tr class="border-b">
+              <td class="py-3 px-4 text-sm text-gray-900">{{ record.last_run }}</td>
               <td class="py-3 px-4 text-sm text-gray-900">{{ record.date }}</td>
               <td class="py-3 px-4 text-sm text-gray-900">
                 {{ record.percentage|floatformat:2 }}%
