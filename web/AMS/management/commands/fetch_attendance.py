@@ -2,6 +2,7 @@ from datetime import datetime
 from django.core.management.base import BaseCommand
 from AMS.models import Student, Attendance
 from AMS.utils import fetch_att
+import requests
 
 class Command(BaseCommand):
     help = 'Fetch attendance for all registered students'
@@ -28,5 +29,10 @@ class Command(BaseCommand):
                 attendance.save()
 
                 self.stdout.write(self.style.SUCCESS(f"Successfully updated attendance for {student_name}"))
+
+                requests.post(
+                    f"https://ntfy.foss.rizexor.com/{student.ntfy_topic}",
+                    data=f"{student_name} attendance is {percentage}",
+                )
             except Exception as e:
                 self.stdout.write(self.style.ERROR(f"Failed to fetch attendance for {username}: {str(e)}"))

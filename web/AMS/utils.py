@@ -61,11 +61,7 @@ def fetch_att(username, pwd, max_retries=3):
             browser.close()
             
             date_obj = datetime.strptime(end_date, '%d/%b/%Y')
-            end_date = date_obj.strftime('%d-%m-%Y')
-            
-
-            
-            
+            end_date = date_obj.strftime('%d-%m-%Y')            
             
             return student_name, percentage, end_date
 
