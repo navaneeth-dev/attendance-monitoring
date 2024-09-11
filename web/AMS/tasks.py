@@ -3,6 +3,7 @@ from AMS.models import Student, Attendance
 from AMS.utils import fetch_att
 from datetime import datetime
 from celery.utils.log import get_task_logger
+import requests
 
 logger = get_task_logger(__name__)
 
@@ -28,5 +29,10 @@ def fetch_attendances(name="AMS.fetch_attendances"):
             )
             logger.info(f"Success for {student_name}")
             attendance.save()
+
+            requests.post(
+                f"https://ntfy.foss.rizexor.com/{student.ntfy_topic}",
+                data=f"{student_name} attendance is {percentage}",
+            )
         except Exception as e:
             logger.error(e)
