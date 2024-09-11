@@ -11,6 +11,8 @@ class StudentRegistrationForm(forms.ModelForm):
     def save(self, commit=True):
         student = super().save(commit=False)
         student.set_password(self.cleaned_data['password'])
+        student.set_ntfy_topic()
+
         if commit:
             student.save()
         return student
