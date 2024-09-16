@@ -114,6 +114,7 @@
               <th class="py-3 px-4 text-left text-sm font-medium text-gray-900">
                 Date
               </th>
+              <th class="py-3 px-4 text-left text-sm font-medium text-gray-900">Subject Details</th>
               <th class="py-3 px-4 text-left text-sm font-medium text-gray-900">
                 Percentage
               </th>
@@ -124,6 +125,7 @@
             <tr class="border-b">
               <td class="py-3 px-4 text-sm text-gray-900">{{ record.last_run }}</td>
               <td class="py-3 px-4 text-sm text-gray-900">{{ record.date }}</td>
+              <td class="py-3 px-4 text-sm text-gray-900">{{ record.subject_details }}</td>
               <td class="py-3 px-4 text-sm text-gray-900">
                 {{ record.percentage|floatformat:2 }}%
               </td>
