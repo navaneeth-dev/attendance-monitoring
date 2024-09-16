@@ -18,8 +18,13 @@
       function drawChart() {
         // Create the data table.
         var data = new google.visualization.DataTable();
+        var data2 = new google.visualization.DataTable();
+
         data.addColumn('string', 'Date');
         data.addColumn('number', 'Percentage');
+
+        data2.addColumn('string', 'Date');
+        data2.addColumn('number', 'Percentage');
 
         // Add data from Django context.
         var chartData = [
@@ -28,11 +33,29 @@
           {% endfor %}
         ];
 
+        var chartData2 = [
+          {% for record in attendance_records %}
+            ['{{ record.date }}', {{ record.percentage|floatformat:2 }}],
+          {% endfor %}
+        ];
+
         data.addRows(chartData.reverse());
+        data2.addRows(chartData2.reverse());
 
         // Set chart options
         var options = {
-          title: 'Attendance Over Time',
+          curveType: 'function',
+          pointsVisible: true,
+          hAxis: {
+            title: 'Date',
+          },
+          vAxis: {
+            title: 'Percentage',
+            ticks: [10, 20, 30, 40, 50, 60, 70, 80, 90, 100]
+          },
+        };
+
+        var options2 = {
           curveType: 'function',
           pointsVisible: true,
           hAxis: {
@@ -46,7 +69,10 @@
 
         // Instantiate and draw our chart, passing in some options.
         var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+        var chart2 = new google.visualization.LineChart(document.getElementById('curve_chart2'));
+
         chart.draw(data, options);
+        chart2.draw(data2, options2);
       }
     </script>
     <script>
@@ -102,7 +128,11 @@
       {% endif %}
 
       <div class="bg-white border border-gray-200 rounded-lg shadow-md p-4">
-        <div id="curve_chart" style="width: 100%; height: 500px"></div>
+        <h2 class="font-bold text-2xl text-center">Attendance Percentage</h2>
+        <div id="curve_chart" style="height: 500px" class="w-full mb-3"></div>
+        <hr/>
+        <h2 class="font-bold text-2xl text-center mt-3">Subject Attendance</h2>
+        <div id="curve_chart2" style="height: 500px" class="w-full mb-3"></div>
         <table
           class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md mt-6"
         >
