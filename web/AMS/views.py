@@ -66,7 +66,7 @@ def dashboard(request):
 
     context = {
         "student": student,
-        "attendance_records": student_attendance,
+        "attendance_records": reversed(student_attendance),
         "error_message": error_message,
     }
 
