@@ -43,3 +43,4 @@ class Attendance(models.Model):
     date = models.DateField()
     percentage = models.FloatField()
     last_run = models.DateTimeField(auto_now_add=True)
+    subject_details = models.JSONField(null=True)
