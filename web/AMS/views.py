@@ -43,7 +43,6 @@ def login_view(request):
 
 @login_required
 def dashboard(request):
-
     student_id = request.session.get("student_id")
 
     if not student_id:
@@ -64,10 +63,34 @@ def dashboard(request):
     else:
         error_message = "Student record not found."
 
+    subjects_len = len(student_attendance[0].subject_details)
+    subjects = set()
+    subject_details = []
+    for attendance in student_attendance:
+        sj = attendance.subject_details
+        if sj is None:
+            subject_details.append(
+                [
+                    attendance.date.strftime("%d %b %Y"),
+                    *[0 for _ in range(subjects_len)],
+                ]
+            )
+            continue
+
+        subject_details.append(
+            [attendance.date.strftime("%d %b %Y"), *list(sj.values())]
+        )
+        for subject in sj.keys():
+            subjects.add(subject)
+
+    print(subject_details)
+
     context = {
         "student": student,
         "attendance_records": student_attendance,
         "error_message": error_message,
+        "subjects": list(subjects),
+        "subject_details": subject_details,
     }
 
     return render(request, "dashboard.html", context)

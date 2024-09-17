@@ -17,34 +17,33 @@
 
       function drawChart() {
         // Create the data table.
-        var data = new google.visualization.DataTable();
-        var data2 = new google.visualization.DataTable();
+        const data = new google.visualization.DataTable();
+        const data2 = new google.visualization.DataTable();
 
         data.addColumn('string', 'Date');
         data.addColumn('number', 'Percentage');
 
         data2.addColumn('string', 'Date');
-        data2.addColumn('number', 'Percentage');
+
+        const subjects = {{ subjects|safe }};
+        subjects.forEach(subject => {
+            data2.addColumn('number', subject);
+        });
 
         // Add data from Django context.
-        var chartData = [
+        const chartData = [
           {% for record in attendance_records %}
             ['{{ record.date }}', {{ record.percentage|floatformat:2 }}],
           {% endfor %}
         ];
 
-        var chartData2 = [
-          {% for record in attendance_records %}
-            ['{{ record.date }}', {{ record.percentage|floatformat:2 }}],
-          {% endfor %}
-        ];
+        const chartData2 = {{ subject_details|safe }};
 
         data.addRows(chartData.reverse());
         data2.addRows(chartData2.reverse());
 
         // Set chart options
-        var options = {
-          curveType: 'function',
+        const options = {
           pointsVisible: true,
           hAxis: {
             title: 'Date',
@@ -55,8 +54,7 @@
           },
         };
 
-        var options2 = {
-          curveType: 'function',
+        const options2 = {
           pointsVisible: true,
           hAxis: {
             title: 'Date',
@@ -68,8 +66,8 @@
         };
 
         // Instantiate and draw our chart, passing in some options.
-        var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
-        var chart2 = new google.visualization.LineChart(document.getElementById('curve_chart2'));
+        const chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+        const chart2 = new google.visualization.LineChart(document.getElementById('curve_chart2'));
 
         chart.draw(data, options);
         chart2.draw(data2, options2);
@@ -134,7 +132,7 @@
         <h2 class="font-bold text-2xl text-center mt-3">Subject Attendance</h2>
         <div id="curve_chart2" style="height: 500px" class="w-full mb-3"></div>
         <table
-          class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md mt-6"
+          class="min-w-full bg-white border border-gray-200 rounded-lg shadow-md mt-6 overflow-scroll"
         >
           <thead>
             <tr class="bg-gray-100 border-b">
@@ -144,10 +142,12 @@
               <th class="py-3 px-4 text-left text-sm font-medium text-gray-900">
                 Date
               </th>
-              <th class="py-3 px-4 text-left text-sm font-medium text-gray-900">Subject Details</th>
               <th class="py-3 px-4 text-left text-sm font-medium text-gray-900">
                 Percentage
               </th>
+              {% for sub in attendance_records.0.subject_details %}
+                  <th class="py-3 px-4 text-left text-sm font-medium text-gray-900">{{ sub }}</th>
+              {% endfor %}
             </tr>
           </thead>
           <tbody>
@@ -155,10 +155,12 @@
             <tr class="border-b">
               <td class="py-3 px-4 text-sm text-gray-900">{{ record.last_run }}</td>
               <td class="py-3 px-4 text-sm text-gray-900">{{ record.date }}</td>
-              <td class="py-3 px-4 text-sm text-gray-900">{{ record.subject_details }}</td>
               <td class="py-3 px-4 text-sm text-gray-900">
                 {{ record.percentage|floatformat:2 }}%
               </td>
+              {% for sub, value in record.subject_details.items %}
+              <td class="py-3 px-4 text-sm text-gray-900">{{ value }}</td>
+              {% endfor %}
             </tr>
             {% endfor %} {% else %}
             <tr>
