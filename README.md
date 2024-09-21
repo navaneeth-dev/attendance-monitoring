@@ -1,6 +1,5 @@
 <h1 align="center">Attendance Monitoring</h1>
-
-_Daily attendance tracker for 75% requirement_
+<p align="center">Daily attendance tracker for 75% requirement</p>
 
 ## How Does It Work?
 
